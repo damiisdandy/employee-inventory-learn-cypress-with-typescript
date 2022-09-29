@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 interface Props {
   onClose: () => void;
+  refetch: Function;
 }
 
 type UserFields = Omit<User, "id">;
@@ -37,7 +38,7 @@ const OCCUPATIONS: { name: string; value: Occupation }[] = [
   },
 ];
 
-export default function UploadEmployee({ onClose }: Props) {
+export default function UploadEmployee({ onClose, refetch }: Props) {
   const { register, handleSubmit } = useForm<UserFields>();
   const [loading, setLoading] = useState(false);
 
@@ -46,6 +47,7 @@ export default function UploadEmployee({ onClose }: Props) {
       setLoading(true);
       await axios.post("/api/employees", data);
       toast.success("Employee uploaded");
+      refetch();
       onClose();
     } catch (err) {
       toast.error("Problem uploading employee, email might have been taken");

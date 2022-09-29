@@ -5,14 +5,20 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-export default function Employee({ id, email, name, occupation }: User) {
+export default function Employee({
+  email,
+  name,
+  occupation,
+  refetch,
+}: User & { refetch: Function }) {
   const [loading, setLoading] = useState(false);
 
   const removeEmployee = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/employees/${id}`);
+      await axios.delete(`/api/employees/${email}`);
       toast.success("Employee removed");
+      refetch();
     } catch (err) {
       toast.error("Problem removing employee");
     } finally {

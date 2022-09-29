@@ -1,23 +1,27 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { ChangeEventHandler, useState } from "react";
-import useSWR from "swr";
+import { ChangeEventHandler, useCallback, useState } from "react";
 import UploadEmployee from "../components/UploadEmployee/UploadEmployee";
 import axios from "axios";
 import { User } from "@prisma/client";
 import Employee from "../components/Employee/Employee";
-
-const fetcher = (url: string) => axios.get<User[]>(url).then((res) => res.data);
+import { useQuery } from "@tanstack/react-query";
 
 const Home: NextPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const [query, setQuery] = useState("");
-  const { data, error } = useSWR<User[]>(
-    `/api/employees?query=${query}`,
-    fetcher,
-    {
-      refreshInterval: 1000,
-    }
+
+  const fetcher = useCallback(() => {
+    const data = axios
+      .get<User[]>(`/api/employees?query=${query}`)
+      .then((res) => res.data);
+    return data;
+  }, [query]);
+
+  const { data, error, isLoading, refetch } = useQuery<User[]>(
+    ["employees", query],
+    fetcher
   );
 
   const handleQueryChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -26,7 +30,9 @@ const Home: NextPage = () => {
 
   return (
     <>
-      {isOpen && <UploadEmployee onClose={() => setIsOpen(false)} />}
+      {isOpen && (
+        <UploadEmployee refetch={refetch} onClose={() => setIsOpen(false)} />
+      )}
       <div className="min-h-screen bg-slate-200 p-7">
         <Head>
           <title>Employee Inventory 👨🏾‍💼</title>
@@ -59,7 +65,7 @@ const Home: NextPage = () => {
               Upload Employee
             </button>
           </div>
-          {!data && !error ? (
+          {isLoading ? (
             <p className="text-center text-lg uppercase mt-6 font-bold text-gray-500">
               Loading...
             </p>
@@ -74,7 +80,7 @@ const Home: NextPage = () => {
           ) : (
             <div className="mt-6 grid grid-cols-4 gap-5">
               {data?.map((el) => (
-                <Employee key={el.id} {...el} />
+                <Employee key={el.id} refetch={refetch} {...el} />
               ))}
             </div>
           )}

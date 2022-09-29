@@ -7,7 +7,7 @@ const deleteEmployee: HandlerFunction<null | string> = async (req, res) => {
   try {
     await prisma.user.delete({
       where: {
-        id: Number(id),
+        email: id as string,
       },
     });
     res.status(204).json(null);

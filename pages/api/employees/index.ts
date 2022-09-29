@@ -10,7 +10,7 @@ export type HandlerFunction<T> = (req: NextApiRequest,
 const getEmployees: HandlerFunction<User[] | string> = async (req, res) => {
   const { query } = req.query as { query: string };
   try {
-    const employess = await prisma.user.findMany({
+    const employees = await prisma.user.findMany({
       where: {
         name: {
           contains: query,
@@ -18,7 +18,7 @@ const getEmployees: HandlerFunction<User[] | string> = async (req, res) => {
         }
       }
     })
-    res.status(200).json(employess);
+    res.status(200).json(employees);
   } catch (err) {
     res.status(400).send("Problem fetching employees");
   }
