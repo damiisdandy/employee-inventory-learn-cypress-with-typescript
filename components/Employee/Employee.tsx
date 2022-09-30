@@ -29,7 +29,7 @@ export default function Employee({
     <div className="w-full p-3 bg-white items-center justify-center rounded-md flex flex-col gap-1.5">
       <img
         className="rounded-full w-28 h-28 border-2 border-blue-500"
-        src={`https://avatars.dicebear.com/api/micah/${email}.svg`}
+        src={`https://avatars.dicebear.com/api/pixel-art/${email}.svg`}
         alt={name}
       />
       <p className="text-center capitalize">{name}</p>
