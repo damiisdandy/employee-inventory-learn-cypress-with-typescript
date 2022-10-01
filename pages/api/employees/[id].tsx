@@ -10,7 +10,7 @@ const deleteEmployee: HandlerFunction<null | string> = async (req, res) => {
         email: id as string,
       },
     });
-    res.status(204).json(null);
+    res.status(204);
   } catch (err: any) {
     res.status(400).send(`Problem deleting employee, ${err.toString()}`);
   }
