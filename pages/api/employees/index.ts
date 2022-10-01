@@ -1,16 +1,16 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { User, PrismaClient } from '@prisma/client'
+import { Employee, PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export const prisma = new PrismaClient();
 
 export type HandlerFunction<T> = (req: NextApiRequest,
-  res: NextApiResponse<T>) => void;
+  res: NextApiResponse<T>) => Promise<void>;
 
-const getEmployees: HandlerFunction<User[] | string> = async (req, res) => {
-  const { query } = req.query as { query: string };
+const getEmployees: HandlerFunction<Employee[] | string> = async (req, res) => {
   try {
-    const employees = await prisma.user.findMany({
+    const { query } = req.query as { query: string };
+    const employees = await prisma.employee.findMany({
       where: {
         name: {
           contains: query,
@@ -19,34 +19,34 @@ const getEmployees: HandlerFunction<User[] | string> = async (req, res) => {
       }
     })
     res.status(200).json(employees);
-  } catch (err) {
-    res.status(400).send("Problem fetching employees");
+  } catch (err: any) {
+    res.status(400).send(`Problem fetching employees, ${err.toString()}`);
   }
 }
 
-const createEmployee: HandlerFunction<User | string> = async (req, res) => {
-  const user: User = req.body;
+const createEmployee: HandlerFunction<Employee | string> = async (req, res) => {
   try {
-    const newUser = await prisma.user.create({
+    const user: Employee = req.body;
+    const newEmployee = await prisma.employee.create({
       data: user,
     })
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(400).send("Problem creating employee");
+    res.status(201).json(newEmployee);
+  } catch (err: any) {
+    res.status(400).send(`Problem creating employees, ${err.toString()}`);
   }
 }
 
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<User | User[] | null | string>
+  res: NextApiResponse<Employee | Employee[] | null | string>
 ) {
   switch (req.method) {
     case 'GET':
-      getEmployees(req, res);
+      await getEmployees(req, res);
       break;
     case 'POST':
-      createEmployee(req, res);
+      await createEmployee(req, res);
       break;
     default:
       res.status(404).send(`Request Method ${req.method} Not Found`);

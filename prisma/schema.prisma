@@ -19,7 +19,7 @@ enum Occupation {
   STUDENT
 }
 
-model User {
+model Employee {
   id         Int        @id @default(autoincrement())
   email      String     @unique
   name       String

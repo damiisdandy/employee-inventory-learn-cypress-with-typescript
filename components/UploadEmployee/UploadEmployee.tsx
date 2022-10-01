@@ -1,4 +1,4 @@
-import { Occupation, User } from "@prisma/client";
+import { Occupation, Employee } from "@prisma/client";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,7 +9,7 @@ interface Props {
   refetch: Function;
 }
 
-type UserFields = Omit<User, "id">;
+type UserFields = Omit<Employee, "id">;
 
 const OCCUPATIONS: { name: string; value: Occupation }[] = [
   {
@@ -67,6 +67,7 @@ export default function UploadEmployee({ onClose, refetch }: Props) {
             <p className="font-bold text-md">Name:</p>
             <input
               {...register("name")}
+              data-cy="modal-input-name"
               required
               type="text"
               className="outline-none border-transparent bg-gray-100 w-full p-1 px-2 border-2 rounded-md focus:border-blue-500"
@@ -77,6 +78,7 @@ export default function UploadEmployee({ onClose, refetch }: Props) {
             <p className="font-bold text-md">Email:</p>
             <input
               {...register("email")}
+              data-cy="modal-input-email"
               required
               type="email"
               className="outline-none border-transparent bg-gray-100 w-full p-1 px-2 border-2 rounded-md focus:border-blue-500"
@@ -87,6 +89,7 @@ export default function UploadEmployee({ onClose, refetch }: Props) {
             <p className="font-bold text-md">Occupation:</p>
             <select
               {...register("occupation")}
+              data-cy="modal-input-occupation"
               required
               className="outline-none border-transparent bg-gray-100 w-full p-1 px-2 border-2 rounded-md focus:border-blue-500"
               placeholder="e.g hello@damiisdandy.com"
@@ -108,6 +111,7 @@ export default function UploadEmployee({ onClose, refetch }: Props) {
             </button>
             <button
               disabled={loading}
+              data-cy="modal-button"
               type="submit"
               className="px-4 py-1.5 font-bold bg-blue-500 text-white rounded-md disabled:opacity-50"
             >

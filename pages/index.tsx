@@ -3,8 +3,8 @@ import Head from "next/head";
 import { ChangeEventHandler, useCallback, useState } from "react";
 import UploadEmployee from "../components/UploadEmployee/UploadEmployee";
 import axios from "axios";
-import { User } from "@prisma/client";
-import Employee from "../components/Employee/Employee";
+import { Employee } from "@prisma/client";
+import EmployeeCard from "../components/Employee/Employee";
 import { useQuery } from "@tanstack/react-query";
 
 const Home: NextPage = () => {
@@ -14,12 +14,12 @@ const Home: NextPage = () => {
 
   const fetcher = useCallback(() => {
     const data = axios
-      .get<User[]>(`/api/employees?query=${query}`)
+      .get<Employee[]>(`/api/employees?query=${query}`)
       .then((res) => res.data);
     return data;
   }, [query]);
 
-  const { data, error, isLoading, refetch } = useQuery<User[]>(
+  const { data, error, isLoading, refetch } = useQuery<Employee[]>(
     ["employees", query],
     fetcher
   );
@@ -51,6 +51,7 @@ const Home: NextPage = () => {
           </p>
           <div className="flex gap-4 flex-col justify-center items-center mt-4 w-full">
             <input
+              data-cy="search-bar"
               className="focus:border-blue-500 border-2 focus:outline-none px-4 py-1.5 w-1/3 rounded-md"
               type="text"
               name="employee"
@@ -59,6 +60,7 @@ const Home: NextPage = () => {
               onChange={handleQueryChange}
             />
             <button
+              data-cy="modal-open-button"
               onClick={() => setIsOpen(true)}
               className="bg-blue-500 text-white px-4 py-2 font-bold rounded-md hover:scale-105 transition-all ease-in-out"
             >
@@ -78,9 +80,9 @@ const Home: NextPage = () => {
               You have no employee
             </p>
           ) : (
-            <div className="mt-6 grid grid-cols-4 gap-5">
+            <div data-cy="employees" className="mt-6 grid grid-cols-4 gap-5">
               {data?.map((el) => (
-                <Employee key={el.id} refetch={refetch} {...el} />
+                <EmployeeCard key={el.id} refetch={refetch} {...el} />
               ))}
             </div>
           )}

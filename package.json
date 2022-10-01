@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:test": "NODE_ENV=test next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "docker-compose": "docker-compose up -d"
+    "docker-compose": "docker-compose up -d",
+    "cypress:open": "yarn cypress open"
   },
   "dependencies": {
     "@prisma/client": "4.4.0",
@@ -17,7 +19,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.36.1",
-    "react-hot-toast": "^2.4.0"
+    "react-hot-toast": "^2.4.0",
+    "slugify": "^1.6.5"
   },
   "devDependencies": {
     "@types/node": "18.7.23",
@@ -27,6 +30,7 @@
     "cypress": "^10.9.0",
     "eslint": "8.24.0",
     "eslint-config-next": "12.3.1",
+    "eslint-config-prettier": "^8.5.0",
     "postcss": "^8.4.16",
     "prisma": "^4.4.0",
     "tailwindcss": "^3.1.8",
